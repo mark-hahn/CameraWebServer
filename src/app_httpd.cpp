@@ -268,7 +268,7 @@ static int run_face_recognition(fb_data_t *fb, std::list<dl::detect::result_t> *
 
     if (enrolled_count < FACE_ID_SAVE_NUMBER && is_enrolling){
         id = recognizer.enroll_id(tensor, landmarks, "", true);
-        log_i("Enrolled ID: %d", id);
+        Serial.print("Enrolled ID: %d"); Serial.println(id);
         rgb_printf(fb, FACE_COLOR_CYAN, "ID[%u]", id);
     }
 
@@ -294,7 +294,7 @@ void enable_led(bool en)
     ledcWrite(LED_LEDC_GPIO, duty);
     //ledc_set_duty(CONFIG_LED_LEDC_SPEED_MODE, CONFIG_LED_LEDC_CHANNEL, duty);
     //ledc_update_duty(CONFIG_LED_LEDC_SPEED_MODE, CONFIG_LED_LEDC_CHANNEL);
-    log_i("Set LED intensity to %d", duty);
+    Serial.print("Set LED intensity to %d"); Serial.println(duty);
 }
 #endif
 
@@ -914,7 +914,7 @@ static esp_err_t cmd_handler(httpd_req_t *req)
 #if CONFIG_ESP_FACE_RECOGNITION_ENABLED
     else if (!strcmp(variable, "face_enroll")){
         is_enrolling = !is_enrolling;
-        log_i("Enrolling: %s", is_enrolling?"true":"false");
+        Serial.print("Enrolling: %s"); Serial.println(is_enrolling?"true":"false");
     }
     else if (!strcmp(variable, "face_recognize")) {
         recognition_enabled = val;
@@ -925,7 +925,7 @@ static esp_err_t cmd_handler(httpd_req_t *req)
 #endif
 #endif
     else {
-        log_i("Unknown command: %s", variable);
+        Serial.print("Unknown command:"); Serial.println(variable);
         res = -1;
     }
 
@@ -1039,7 +1039,7 @@ static esp_err_t xclk_handler(httpd_req_t *req)
     free(buf);
 
     int xclk = atoi(_xclk);
-    log_i("Set XCLK: %d MHz", xclk);
+    Serial.print("Set XCLK:"); Serial.println(xclk);
 
     sensor_t *s = esp_camera_sensor_get();
     int res = s->set_xclk(s, LEDC_TIMER_0, xclk);
@@ -1209,6 +1209,7 @@ static esp_err_t index_handler(httpd_req_t *req)
 
 void startCameraServer()
 {
+    Serial.println("Starting web camera server...");
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.max_uri_handlers = 16;
 
@@ -1357,13 +1358,7 @@ void startCameraServer()
 
     ra_filter_init(&ra_filter, 20);
 
-#if CONFIG_ESP_FACE_RECOGNITION_ENABLED
-    recognizer.set_partition(ESP_PARTITION_TYPE_DATA, ESP_PARTITION_SUBTYPE_ANY, "fr");
-
-    // load ids from flash partition
-    recognizer.set_ids_from_flash();
-#endif
-    log_i("Starting web server on port: '%d'", config.server_port);
+    Serial.print("Starting web server on port:"); Serial.println(config.server_port);
     if (httpd_start(&camera_httpd, &config) == ESP_OK)
     {
         httpd_register_uri_handler(camera_httpd, &index_uri);
@@ -1381,7 +1376,7 @@ void startCameraServer()
 
     config.server_port += 1;
     config.ctrl_port += 1;
-    log_i("Starting stream server on port: '%d'", config.server_port);
+    Serial.print("Starting stream server on port:"); Serial.println(config.server_port);
     if (httpd_start(&stream_httpd, &config) == ESP_OK)
     {
         httpd_register_uri_handler(stream_httpd, &stream_uri);

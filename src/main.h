@@ -1,3 +1,6 @@
+#ifndef _MAIN_
+#define _MAIN_
+
 // ===================
 // Select camera model
 // ===================
@@ -21,3 +24,5 @@
 
 #define flashOn()  digitalWrite(4, HIGH)
 #define flashOff() digitalWrite(4, LOW)
+
+#endif  // _MAIN_
