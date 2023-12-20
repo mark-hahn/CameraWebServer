@@ -710,7 +710,9 @@ static esp_err_t cmd_handler(httpd_req_t *req)
     free(buf);
 
     int val = atoi(value);
-    log_i("%s = %d", variable, val);
+    
+    Serial.printf("%s = %d", variable, val);
+
     sensor_t *s = esp_camera_sensor_get();
     int res = 0;
 
