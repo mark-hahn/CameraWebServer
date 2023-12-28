@@ -42,7 +42,7 @@ void setup() {
   config.pin_pwdn = PWDN_GPIO_NUM;
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
-  config.frame_size = FRAMESIZE_UXGA;
+  config.frame_size = FRAMESIZE_SXGA;
   config.pixel_format = PIXFORMAT_JPEG; // for streaming
   //config.pixel_format = PIXFORMAT_RGB565; // for face detection/recognition
   config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
@@ -82,17 +82,17 @@ void setup() {
     return;
   }
 
-  sensor_t * s = esp_camera_sensor_get();
-  // initial sensors are flipped vertically and colors are a bit saturated
-  if (s->id.PID == OV3660_PID) {
-    s->set_vflip(s, 1); // flip it back
-    s->set_brightness(s, 1); // up the brightness just a bit
-    s->set_saturation(s, -2); // lower the saturation
-  }
-  // drop down frame size for higher initial frame rate
-  if(config.pixel_format == PIXFORMAT_JPEG){
-    s->set_framesize(s, FRAMESIZE_UXGA);
-  }
+  // sensor_t * s = esp_camera_sensor_get();
+  // // initial sensors are flipped vertically and colors are a bit saturated
+  // if (s->id.PID == OV3660_PID) {
+  //   s->set_vflip(s, 1); // flip it back
+  //   s->set_brightness(s, 1); // up the brightness just a bit
+  //   s->set_saturation(s, -2); // lower the saturation
+  // }
+  // // drop down frame size for higher initial frame rate
+  // if(config.pixel_format == PIXFORMAT_JPEG){
+  //   s->set_framesize(s, FRAMESIZE_UXGA);
+  // }
 
 #if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)
   s->set_vflip(s, 1);
